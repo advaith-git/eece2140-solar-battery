@@ -104,12 +104,44 @@ void taskSetupBattery(SimulationState& state)
     state.battery.print();
 }
 
-// T5  Owner: Advaith and Jailen  Status: stub
+// T5  Owner: Advaith and Jailen  Status: in progress
+// TODO: show battery and grid amounts once shortfall hours are handled
 void taskRun24Hour(SimulationState& state)
 {
-    (void)state;
+    vector<HourResult> results;
 
-    cout << "T5 Run 24-hour simulation: not implemented yet." << endl;
+    if (!state.manager.runSimulation(state.panel, state.battery, state.load, HOURS_PER_DAY))
+    {
+        cout << "Load sunlight data (option 1) and demand data (option 2) first." << endl;
+        return;
+    }
+
+    results = state.manager.getResults();
+
+    cout << fixed << setprecision(3);
+    cout << setw(6) << "Hour" << setw(10) << "Solar" << setw(10) << "Demand"
+         << setw(12) << "To battery" << setw(10) << "To grid" << setw(14) << "Battery kWh" << endl;
+
+    for (int h = 0; h < static_cast<int>(results.size()); h++)
+    {
+        cout << setw(6) << results[h].hour
+             << setw(10) << results[h].solarKWh
+             << setw(10) << results[h].demandKWh;
+
+        if (results[h].solarKWh >= results[h].demandKWh)
+        {
+            cout << setw(12) << results[h].solarToBattery
+                 << setw(10) << results[h].solarToGrid
+                 << setw(14) << results[h].batteryChargeKWh << endl;
+        }
+        else
+        {
+            cout << "   shortfall not handled yet" << endl;
+        }
+    }
+
+    cout.unsetf(ios::fixed);
+    cout << setprecision(6);
 }
 
 // T6  Owner: Advaith and Jailen  Status: stub
