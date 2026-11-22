@@ -27,10 +27,26 @@ const vector<HourResult>& EnergyManager::getResults() const
     return results;
 }
 
-// STUB
+// Checks that energy in equals energy out for every hour, within tolerance.
+// In:  solar + battery to home + grid to home
+// Out: demand + solar to battery + solar to grid
+// TODO: call this from taskRun24Hour once shortfall hours are handled,
+// and add tests for it in tests.cpp.
 bool EnergyManager::checkBalance(double tolerance) const
 {
-    (void)tolerance;
+    for (int h = 0; h < static_cast<int>(results.size()); h++)
+    {
+        double energyIn;
+        double energyOut;
 
-    return false;
+        energyIn = results[h].solarKWh + results[h].batteryToHome + results[h].gridToHome;
+        energyOut = results[h].demandKWh + results[h].solarToBattery + results[h].solarToGrid;
+
+        if (energyIn - energyOut > tolerance || energyOut - energyIn > tolerance)
+        {
+            return false;
+        }
+    }
+
+    return true;
 }
