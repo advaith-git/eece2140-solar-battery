@@ -16,7 +16,7 @@ Date: November 21, 2026
 
 const int HOURS_PER_DAY = 24;
 
-bool readHourlyCsv(const std::string& filename, std::vector<double>& values);
+bool readHourlyCsv(const std::string& filename, std::vector<double>& values, std::string& errorMessage);
 double promptDouble(const std::string& prompt, double minValue, double maxValue);
 
 #endif

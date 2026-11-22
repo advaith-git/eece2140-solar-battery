@@ -14,18 +14,19 @@ Date: November 21, 2026
 
 using namespace std;
 
-// T1  Owner: Advaith  Status: in progress
+// T1  Owner: Advaith  Status: done
 void taskLoadSunlight(SimulationState& state)
 {
     string filename;
+    string errorMessage;
     vector<double> values;
 
     cout << "Enter sunlight CSV file (example: data/sunlight_sunny.csv): ";
     getline(cin, filename);
 
-    if (!readHourlyCsv(filename, values))
+    if (!readHourlyCsv(filename, values, errorMessage))
     {
-        cout << "Error: could not open " << filename << endl;
+        cout << "Error: " << errorMessage << endl;
         return;
     }
 
