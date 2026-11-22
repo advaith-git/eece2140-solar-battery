@@ -7,6 +7,7 @@ Date: November 21, 2026
 */
 
 #include <iostream>
+#include <algorithm>
 #include "battery.h"
 
 using namespace std;
@@ -33,22 +34,45 @@ bool Battery::setLimits(double capacity, double minPercent, double maxRate)
     return true;
 }
 
-// STUB: will store energy without going over capacity or the rate limit
+// Stores as much of amountKWh as the battery can take in one hour.
+// Returns the amount actually stored.
 double Battery::charge(double amountKWh)
 {
-    (void)amountKWh;
+    double accepted;
+    double room;
 
-    return 0.0;
+    if (amountKWh <= 0.0)
+    {
+        return 0.0;
+    }
+
+    room = capacityKWh - chargeKWh;
+    accepted = min(amountKWh, maxRateKW);
+    accepted = min(accepted, room);
+
+    chargeKWh = chargeKWh + accepted;
+    return accepted;
 }
 
-// STUB: will give out energy without going under the minimum charge or the rate limit
+// Gives out as much of amountKWh as the battery can supply in one hour.
+// Returns the amount actually delivered.
 double Battery::discharge(double amountKWh)
 {
-    (void)amountKWh;
+    double delivered;
+    double available;
 
-    return 0.0;
+    if (amountKWh <= 0.0)
+    {
+        return 0.0;
+    }
+
+    available = chargeKWh - minChargeKWh;
+    delivered = min(amountKWh, maxRateKW);
+    delivered = min(delivered, available);
+
+    chargeKWh = chargeKWh - delivered;
+    return delivered;
 }
-
 double Battery::getCharge() const
 {
     return chargeKWh;
