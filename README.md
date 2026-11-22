@@ -5,14 +5,14 @@ Team: Advaith Nair, Jailen Patel
 
 A C++ console program that simulates a home solar panel and battery system hour by hour. Solar powers the home first, extra solar charges the battery, and anything left goes to the grid. When solar is not enough, the battery covers the gap first and the grid covers the rest.
 
-## Status (Iteration 2)
+## Status
 
-The menu includes every task and the program compiles and runs. Options 1, 3, and 4 have been started but are not finished. All other options are stubs that print "not implemented yet." See `docs/EECE2140_Project_Plan.xlsx` for the full task table.
+The menu includes every task. See `docs/EECE2140_Project_Plan.xlsx` for the full task table and the status of each task.
 
 ## Build
 
 ```
-g++ -std=c++17 -Wall -Wextra -pedantic solar_sim.cpp -o solar_sim
+g++ -std=c++17 -Wall -Wextra -pedantic *.cpp -o solar_sim
 ```
 
 ## Run
@@ -21,7 +21,7 @@ g++ -std=c++17 -Wall -Wextra -pedantic solar_sim.cpp -o solar_sim
 ./solar_sim
 ```
 
-Run the program from the folder that holds the CSV files, or type the path when asked (for example `data/sunlight_sunny.csv`).
+Run the program from the repository root. When it asks for a file, type the path, for example `data/sunlight_sunny.csv`.
 
 ## Input files
 
@@ -36,8 +36,16 @@ Each input file has one header line, then one `hour,value` row per hour starting
 ## Repository layout
 
 ```
-solar_sim.cpp        all code for Iteration 2 (split into .h/.cpp files in Iteration 3)
-data/                sample input files
-docs/                iteration reports (PDF) and the Excel project plan
+main.cpp                      menu and switch statement
+solar_panel.h / .cpp          SolarPanel class
+battery.h / .cpp              Battery class
+load_profile.h / .cpp         LoadProfile class
+energy_manager.h / .cpp       HourResult struct and EnergyManager class
+report.h / .cpp               Report class
+input_reader.h / .cpp         CSV reading and input prompts
+tasks.h / .cpp                one function per menu option (T1 to T9)
+tests.h / .cpp                class tests (T10)
+data/                         sample input files
+docs/                         iteration reports (PDF), Excel project plan, meeting notes
 README.md
 ```
