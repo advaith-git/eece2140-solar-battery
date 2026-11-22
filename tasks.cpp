@@ -34,12 +34,25 @@ void taskLoadSunlight(SimulationState& state)
     cout << "Loaded " << values.size() << " hours of sunlight data." << endl;
 }
 
-// T2  Owner: Advaith  Status: stub
+// T2  Owner: Advaith  Status: done
 void taskLoadDemand(SimulationState& state)
 {
-    (void)state;
+    string filename;
+    string errorMessage;
+    vector<double> values;
 
-    cout << "T2 Load household demand: not implemented yet." << endl;
+    cout << "Enter demand CSV file (example: data/demand_typical.csv): ";
+    getline(cin, filename);
+
+    if (!readHourlyCsv(filename, values, errorMessage))
+    {
+        cout << "Error: " << errorMessage << endl;
+        return;
+    }
+
+    state.load.setDemand(values);
+    cout << "Loaded " << values.size() << " hours of demand data, "
+         << state.load.totalDemand() << " kWh total." << endl;
 }
 
 // T3  Owner: Advaith  Status: in progress

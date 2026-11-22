@@ -20,16 +20,26 @@ int LoadProfile::getHours() const
     return static_cast<int>(demand.size());
 }
 
-// STUB
 double LoadProfile::demandAt(int hour) const
 {
-    (void)hour;
+    if (hour < 0 || hour >= getHours())
+    {
+        return 0.0;
+    }
 
-    return 0.0;
+    return demand[hour];
 }
 
-// STUB
 double LoadProfile::totalDemand() const
 {
-    return 0.0;
+    double total;
+
+    total = 0.0;
+
+    for (int h = 0; h < getHours(); h++)
+    {
+        total = total + demand[h];
+    }
+
+    return total;
 }
