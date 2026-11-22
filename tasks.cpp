@@ -7,6 +7,7 @@ Date: November 21, 2026
 */
 
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include <vector>
 #include "tasks.h"
@@ -55,8 +56,7 @@ void taskLoadDemand(SimulationState& state)
          << state.load.totalDemand() << " kWh total." << endl;
 }
 
-// T3  Owner: Advaith  Status: in progress
-// TODO: print the hourly output table and the daily total
+// T3  Owner: Advaith  Status: done
 void taskSetupPanel(SimulationState& state)
 {
     double area;
@@ -68,9 +68,25 @@ void taskSetupPanel(SimulationState& state)
 
     state.panel.setSize(area, efficiencyPercent / 100.0);
     state.panel.print();
-    cout << "Hourly output table: not implemented yet." << endl;
-}
 
+    if (state.panel.getHours() == 0)
+    {
+        cout << "Load sunlight data (option 1) to see hourly output." << endl;
+        return;
+    }
+
+    cout << fixed << setprecision(3);
+    cout << setw(6) << "Hour" << setw(14) << "Output (kWh)" << endl;
+
+    for (int h = 0; h < state.panel.getHours() && h < HOURS_PER_DAY; h++)
+    {
+        cout << setw(6) << h << setw(14) << state.panel.energyAt(h) << endl;
+    }
+
+    cout << "Total for all loaded hours: " << state.panel.totalEnergy() << " kWh" << endl;
+    cout.unsetf(ios::fixed);
+    cout << setprecision(6);
+}
 // T4  Owner: Jailen  Status: in progress
 // TODO: finish charge() and discharge() in the Battery class
 void taskSetupBattery(SimulationState& state)

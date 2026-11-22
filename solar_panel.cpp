@@ -50,10 +50,18 @@ double SolarPanel::energyAt(int hour) const
     return sunlight[hour] / 1000.0 * areaM2 * efficiency;
 }
 
-// STUB: will add up energyAt() for every loaded hour
 double SolarPanel::totalEnergy() const
 {
-    return 0.0;
+    double total;
+
+    total = 0.0;
+
+    for (int h = 0; h < getHours(); h++)
+    {
+        total = total + energyAt(h);
+    }
+
+    return total;
 }
 
 void SolarPanel::print() const
