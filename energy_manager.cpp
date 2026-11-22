@@ -10,16 +10,58 @@ Date: November 21, 2026
 
 using namespace std;
 
-// STUB: routing order is planned in the report
+// Routes the energy for each hour in the order from the project plan.
+// Steps 1 to 3 (solar covers demand) are done.
+// TODO: steps 4 and 5, where the battery and then the grid cover a shortfall.
 bool EnergyManager::runSimulation(const SolarPanel& panel, Battery& battery,
                                   const LoadProfile& load, int hours)
 {
-    (void)panel;
-    (void)battery;
-    (void)load;
-    (void)hours;
+    results.clear();
 
-    return false;
+    if (panel.getHours() < hours || load.getHours() < hours)
+    {
+        return false;
+    }
+
+    battery.reset();
+
+    for (int h = 0; h < hours; h++)
+    {
+        HourResult result;
+        double extra;
+
+        result.hour = h;
+        result.solarKWh = panel.energyAt(h);
+        result.demandKWh = load.demandAt(h);
+        result.solarToHome = 0.0;
+        result.solarToBattery = 0.0;
+        result.solarToGrid = 0.0;
+        result.batteryToHome = 0.0;
+        result.gridToHome = 0.0;
+
+        if (result.solarKWh >= result.demandKWh)
+        {
+            // Step 1: solar covers the home
+            result.solarToHome = result.demandKWh;
+
+            // Step 2: extra solar charges the battery
+            extra = result.solarKWh - result.demandKWh;
+            result.solarToBattery = battery.charge(extra);
+
+            // Step 3: anything left goes to the grid
+            result.solarToGrid = extra - result.solarToBattery;
+        }
+        else
+        {
+            // Solar covers part of the home. Steps 4 and 5 are not written yet.
+            result.solarToHome = result.solarKWh;
+        }
+
+        result.batteryChargeKWh = battery.getCharge();
+        results.push_back(result);
+    }
+
+    return true;
 }
 
 const vector<HourResult>& EnergyManager::getResults() const
