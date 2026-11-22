@@ -87,8 +87,7 @@ void taskSetupPanel(SimulationState& state)
     cout.unsetf(ios::fixed);
     cout << setprecision(6);
 }
-// T4  Owner: Jailen  Status: in progress
-// TODO: finish charge() and discharge() in the Battery class
+// T4  Owner: Jailen  Status: done
 void taskSetupBattery(SimulationState& state)
 {
     double capacity;
