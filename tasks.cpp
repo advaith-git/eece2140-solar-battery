@@ -152,14 +152,17 @@ void taskRun7Day(SimulationState& state)
     cout << "T6 Run 7-day simulation: not implemented yet." << endl;
 }
 
-// T7  Owner: Jailen  Status: stub
+// T7  Owner: Jailen  Status: in progress
 void taskPrintSummary(SimulationState& state)
 {
-    (void)state;
+    if (state.manager.getResults().empty())
+    {
+        cout << "Run a simulation first (option 5)." << endl;
+        return;
+    }
 
-    cout << "T7 Print summary: not implemented yet." << endl;
+    state.report.printSummary(state.manager.getResults());
 }
-
 // T8  Owner: Jailen  Status: stub
 void taskSaveResults(SimulationState& state)
 {
