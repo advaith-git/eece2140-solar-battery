@@ -7,6 +7,7 @@ Date: November 21, 2026
 */
 
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include <vector>
 #include "tasks.h"
@@ -14,18 +15,19 @@ Date: November 21, 2026
 
 using namespace std;
 
-// T1  Owner: Advaith  Status: in progress
+// T1  Owner: Advaith  Status: done
 void taskLoadSunlight(SimulationState& state)
 {
     string filename;
+    string errorMessage;
     vector<double> values;
 
     cout << "Enter sunlight CSV file (example: data/sunlight_sunny.csv): ";
     getline(cin, filename);
 
-    if (!readHourlyCsv(filename, values))
+    if (!readHourlyCsv(filename, values, errorMessage))
     {
-        cout << "Error: could not open " << filename << endl;
+        cout << "Error: " << errorMessage << endl;
         return;
     }
 
@@ -33,16 +35,28 @@ void taskLoadSunlight(SimulationState& state)
     cout << "Loaded " << values.size() << " hours of sunlight data." << endl;
 }
 
-// T2  Owner: Advaith  Status: stub
+// T2  Owner: Advaith  Status: done
 void taskLoadDemand(SimulationState& state)
 {
-    (void)state;
+    string filename;
+    string errorMessage;
+    vector<double> values;
 
-    cout << "T2 Load household demand: not implemented yet." << endl;
+    cout << "Enter demand CSV file (example: data/demand_typical.csv): ";
+    getline(cin, filename);
+
+    if (!readHourlyCsv(filename, values, errorMessage))
+    {
+        cout << "Error: " << errorMessage << endl;
+        return;
+    }
+
+    state.load.setDemand(values);
+    cout << "Loaded " << values.size() << " hours of demand data, "
+         << state.load.totalDemand() << " kWh total." << endl;
 }
 
-// T3  Owner: Advaith  Status: in progress
-// TODO: print the hourly output table and the daily total
+// T3  Owner: Advaith  Status: done
 void taskSetupPanel(SimulationState& state)
 {
     double area;
@@ -54,9 +68,25 @@ void taskSetupPanel(SimulationState& state)
 
     state.panel.setSize(area, efficiencyPercent / 100.0);
     state.panel.print();
-    cout << "Hourly output table: not implemented yet." << endl;
-}
 
+    if (state.panel.getHours() == 0)
+    {
+        cout << "Load sunlight data (option 1) to see hourly output." << endl;
+        return;
+    }
+
+    cout << fixed << setprecision(3);
+    cout << setw(6) << "Hour" << setw(14) << "Output (kWh)" << endl;
+
+    for (int h = 0; h < state.panel.getHours() && h < HOURS_PER_DAY; h++)
+    {
+        cout << setw(6) << h << setw(14) << state.panel.energyAt(h) << endl;
+    }
+
+    cout << "Total for all loaded hours: " << state.panel.totalEnergy() << " kWh" << endl;
+    cout.unsetf(ios::fixed);
+    cout << setprecision(6);
+}
 // T4  Owner: Jailen  Status: in progress
 // TODO: finish charge() and discharge() in the Battery class
 void taskSetupBattery(SimulationState& state)
